@@ -1,3 +1,4 @@
+import sys
 import re
 
 import utils
@@ -27,4 +28,9 @@ def tokenize(s):
         s = s.replace(unit + '/', unit + ' ')
         s = s.replace(unit + 's/', unit + 's ')
 
-    return filter(None, re.split(r'([,\(\)])?\s*', utils.clumpFractions(s)))
+    if sys.version_info.major == 2:
+        return filter(None, re.split(r'([,\(\)])?\s*', utils.clumpFractions(s)))
+    elif sys.version_info.minor <= 6:
+        return [_f for _f in re.split(r'([,\(\)])?\s*', utils.clumpFractions(s)) if _f]
+    elif sys.version_info.minor > 6:
+        return [_f for _f in re.split(r'([,\s\(\)])', utils.clumpFractions(s)) if _f and _f.strip()]
